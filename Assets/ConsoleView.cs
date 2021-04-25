@@ -60,6 +60,10 @@ public class ConsoleView : MonoBehaviour
 
     void setVisibility(bool visible)
     {
+        if (visible)
+            Cursor.lockState = CursorLockMode.None;
+        else
+            Cursor.lockState = CursorLockMode.Locked;
         viewContainer.SetActive(visible);
     }
 

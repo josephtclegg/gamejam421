@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class DisappearingDoor : MonoBehaviour
 {
+    public int doorNumber = 9999;
     public float chanceOfDisappearing = 33.0f;
 
     private GameObject door;
     private GameObject facade;
     private bool revealDoor = true;
+    private bool isOpen = false;
     private Renderer renderer;
 
     // Start is called before the first frame update
@@ -24,6 +26,7 @@ public class DisappearingDoor : MonoBehaviour
         door.SetActive(true);
         facade.SetActive(false);
         renderer = door.transform.GetChild(0).GetComponent<Renderer>();
+        door.GetComponent<Door>().SetDoorNumber(doorNumber);
     }
 
     // Update is called once per frame
@@ -53,5 +56,12 @@ public class DisappearingDoor : MonoBehaviour
         renderer = facade.GetComponent<Renderer>();
         door.SetActive(false);
         facade.SetActive(true);
+    }
+
+    public void OpenDoor()
+    {
+        if (!revealDoor) return;
+
+        door.GetComponent<Door>().OpenDoor();
     }
 }

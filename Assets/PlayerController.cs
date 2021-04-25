@@ -31,5 +31,13 @@ public class PlayerController : MonoBehaviour
             velocity -= Gravity * Time.deltaTime;
             characterController.Move(new Vector3(0, velocity, 0));
         }
+
+        RaycastHit hit;
+        int layerMask = (1 << 9);
+        if (Input.GetButtonDown("Fire1") && Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, 10.0f, layerMask)) {
+            if (hit.collider.transform.tag == "Door") {
+                hit.collider.transform.gameObject.GetComponent<Door>().OpenDoor();
+            }
+        }
     }
 }
