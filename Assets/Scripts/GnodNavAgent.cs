@@ -9,6 +9,7 @@ public class GnodNavAgent : MonoBehaviour
     public Transform[] patrolPoints;
     public float moveSpeed = 1f;
     public float rotationSpeed = 3f;
+    public float chaseTimeout = 5.0f;
 
     private Vector3 direction;
     private Quaternion lookRot;
@@ -21,6 +22,7 @@ public class GnodNavAgent : MonoBehaviour
         agent.autoBraking = false;
         agent.updateRotation = false;
         GoToNextPoint();
+        chaseTimeout = 0.0f;
     }
 
     void FixedUpdate()
@@ -33,15 +35,19 @@ public class GnodNavAgent : MonoBehaviour
         if(Physics.Raycast(transform.position + Vector3.up, direction, out hit, Mathf.Infinity, layerMask)) {
             Debug.DrawRay(transform.position + Vector3.up, direction * hit.distance, Color.red);
             if (hit.collider.transform.tag == "Player") {
-                agent.isStopped = true;
                 lookRot = Quaternion.LookRotation(direction);
 
                 transform.rotation = Quaternion.Slerp(transform.rotation, lookRot, Time.deltaTime * rotationSpeed);
-                transform.position = Vector3.MoveTowards(transform.position, follow.position, Time.deltaTime * moveSpeed);
+                // transform.position = Vector3.MoveTowards(transform.position, follow.position, Time.deltaTime * moveSpeed);
+                agent.destination = follow.position;
+                chaseTimeout = 5.0f;
             } else {
-                agent.isStopped = false;
-                if (!agent.pathPending && agent.remainingDistance < 0.5f)
-                    GoToNextPoint();
+                if (chaseTimeout <= 0.0f) {
+                    chaseTimeout = 0.0f;
+                    if (!agent.pathPending && agent.remainingDistance < 0.5f)
+                        GoToNextPoint();
+                }
+                else chaseTimeout -= Time.deltaTime;
             }
         }
     }
