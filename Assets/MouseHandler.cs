@@ -13,6 +13,9 @@ public class MouseHandler : MonoBehaviour
     void Start()
     {
         cam = Camera.main;
+        xRotation = cam.transform.eulerAngles.x;
+        yRotation = cam.transform.eulerAngles.y;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     void Update()
@@ -25,5 +28,8 @@ public class MouseHandler : MonoBehaviour
         xRotation = Mathf.Clamp(xRotation, -90, 90);
 
         cam.transform.eulerAngles = new Vector3(xRotation, yRotation, 0.0f);
+
+        if (Input.GetKey(KeyCode.Escape))
+            Cursor.lockState = CursorLockMode.None;
     }
 }

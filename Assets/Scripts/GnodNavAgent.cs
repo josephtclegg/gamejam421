@@ -32,7 +32,6 @@ public class GnodNavAgent : MonoBehaviour
 
         if(Physics.Raycast(transform.position + Vector3.up, direction, out hit, Mathf.Infinity, layerMask)) {
             Debug.DrawRay(transform.position + Vector3.up, direction * hit.distance, Color.red);
-            Debug.Log(hit.collider.transform.tag);
             if (hit.collider.transform.tag == "Player") {
                 agent.isStopped = true;
                 lookRot = Quaternion.LookRotation(direction);
