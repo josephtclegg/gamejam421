@@ -5,7 +5,9 @@ using UnityEngine;
 public class DisappearingDoor : MonoBehaviour
 {
     public int doorNumber = 9999;
+    public string doorText = "";
     public float chanceOfDisappearing = 33.0f;
+    public bool isLocked = false;
 
     private GameObject door;
     private GameObject facade;
@@ -26,12 +28,16 @@ public class DisappearingDoor : MonoBehaviour
         door.SetActive(true);
         facade.SetActive(false);
         renderer = door.transform.GetChild(0).GetComponent<Renderer>();
-        door.GetComponent<Door>().SetDoorNumber(doorNumber);
+        if (doorText.Length > 0)
+            door.GetComponent<Door>().SetDoorText(doorText);
+        else
+            door.GetComponent<Door>().SetDoorNumber(doorNumber);
     }
 
     // Update is called once per frame
     void Update()
     {
+        door.GetComponent<Door>().SetLocked(isLocked);
         if (renderer.isVisible && revealDoor) {
             revealDoor = false;
             if (Random.Range(0.0f, 100.0f) > chanceOfDisappearing)
@@ -42,6 +48,10 @@ public class DisappearingDoor : MonoBehaviour
 
         if (!renderer.isVisible && !revealDoor)
             revealDoor = true;
+    }
+
+    public void SetLocked(bool l) {
+        isLocked = l;
     }
 
     void ShowDoor()

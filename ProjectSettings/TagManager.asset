@@ -8,6 +8,7 @@ TagManager:
   - Wall
   - Door Number
   - Doors
+  - Bathroom
   layers:
   - Default
   - TransparentFX
