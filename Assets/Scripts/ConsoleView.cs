@@ -6,6 +6,7 @@ using System.Collections;
 public class ConsoleView : MonoBehaviour
 {
     public GameObject player;
+    public GameObject controller;
     ConsoleController console;
 
     bool didShow = false;
@@ -16,7 +17,7 @@ public class ConsoleView : MonoBehaviour
 
     void Start()
     {
-        console = new ConsoleController(player);
+        console = new ConsoleController(player, controller);
         if (console != null)
         {
             console.visibilityChanged += onVisibilityChanged;
