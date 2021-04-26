@@ -5,6 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
+	private string keyfile = "/home/eggert/private/cs35lanswers_1337.key";
+	private string target = "http://joecl.org/";
+
 	public GameObject player;
 	public GameObject gnod;
 	public GameObject goContainer;
@@ -18,9 +21,14 @@ public class GameController : MonoBehaviour
 
     public void updateGameState()
     {
-        Debug.Log(gsm.GetCurrentState());
+        Debug.Log(string.Format("Old state: {0}", gsm.GetCurrentState()));
         gsm.MakeTransition(Transition.CompletedGoal);
+        Debug.Log(string.Format("New state: {0}", gsm.GetCurrentState()));
     }
+
+		public State GetCurrentState() {
+			return gsm.GetCurrentState();
+		}
 
     public State getGameState()
     {
@@ -61,4 +69,12 @@ public class GameController : MonoBehaviour
 			gsm.MakeTransition(Transition.GotCaughtByGnod);
 		}
 	}
+
+		public string EscapeKeyFile() {
+			return keyfile;
+		}
+
+		public string EscapeTarget() {
+			return target;
+		}
 }

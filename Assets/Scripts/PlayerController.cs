@@ -3,6 +3,7 @@
 public class PlayerController : MonoBehaviour
 {
     CharacterController characterController;
+    public GameController gc;
     public float MovementSpeed = 1;
     public float Gravity = 9.8f;
     public GameObject controller;
@@ -10,6 +11,8 @@ public class PlayerController : MonoBehaviour
     private float velocity = 0;
     private Camera cam;
     private bool inSeas = false;
+    private bool isInFrontOfBathroom = false;
+    public bool got = false;
 
     private void Start()
     {
@@ -45,6 +48,10 @@ public class PlayerController : MonoBehaviour
                 hit.collider.transform.gameObject.GetComponent<DoorL3>().OpenDoor();
             }
         }
+
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.N)) {
+            gc.updateGameState();
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -72,5 +79,13 @@ public class PlayerController : MonoBehaviour
 
     public CharacterController GetCharacterController() {
         return characterController;
+    }
+
+    public void SetIsInFrontOfBathroom(bool front) {
+        isInFrontOfBathroom = front;
+    }
+
+    public bool IsInFrontOfBathroom() {
+        return isInFrontOfBathroom;
     }
 }

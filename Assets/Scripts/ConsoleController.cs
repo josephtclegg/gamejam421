@@ -67,6 +67,8 @@ public class ConsoleController
         registerCommand("ls", ls, "list directory contents\n");
         registerCommand("cat", cat, "print files\n    Usage: cat FILENAME\n");
         registerCommand("unzip", unzip, "extract compressed ZIP archive\n");
+        registerCommand("chmod", chmod, "Change the mode of each file.\n");
+        registerCommand("ssh", ssh, "Log into a remote machine.\n");
 
         player = p;
         controller = c;
@@ -96,7 +98,7 @@ public class ConsoleController
 
     public void runCommandString(string commandString)
     {
-        appendLogLine("\n$ " + commandString);
+        appendLogLine("\n$ " + commandString + "\n");
 
         string[] commandSplit = parseArguments(commandString);
         string[] args = new string[0];
@@ -319,6 +321,61 @@ public class ConsoleController
                 appendLogLine("\n unzip: 5144.key\n");
             }
         }
+
+    void chmod(string[] args)
+    {
+        string mode = args[0];
+        string file = args[1];
+
+        if (mode != "777" || file != "bathroom") {
+            appendLogLine(string.Format("Permissions for file {0} are not modifiable.", file));
+            return;
+        }
+
+        PlayerController pCont = player.GetComponent<PlayerController>();
+        if (!pCont.IsInFrontOfBathroom() || controller.GetComponent<GameController>().GetCurrentState() != State.SomeGoalsCompleted) {
+            appendLogLine(string.Format("Permission denied."));
+            Debug.Log(string.Format("Player is {0}in front of bathroom and current state is {1}",
+                        !pCont.IsInFrontOfBathroom() ? "not " : "", controller.GetComponent<GameController>().GetCurrentState()));
+            return;
+        }
+
+        appendLogLine("Bathroom unlocked.");
+        DisappearingDoor bathroom = GameObject.FindGameObjectsWithTag("Bathroom")[0].GetComponent<DisappearingDoor>();
+        if (bathroom == null)
+            Debug.Log("Bathroom null");
+        bathroom.SetLocked(false);
+        updateGameState();
+    }
+
+    void ssh(string[] args)
+    {
+        if (args.Length < 3) {
+            appendLogLine("SSH target required.");
+            return;
+        }
+        if (args[0] != "-i") {
+            appendLogLine(string.Format("ssh requires an identity file using -i"));
+            return;
+        }
+
+        string keyfile = args[1];
+        string target = args[2];
+
+        GameController gc = controller.GetComponent<GameController>();
+        if (gc.GetCurrentState() != State.ManyGoalsCompleted
+                || keyfile != gc.EscapeKeyFile()
+                || target != gc.EscapeTarget()) {
+            appendLogLine(string.Format("Permission denied."));
+            Debug.Log(string.Format("Current state is {0}, keyfile is {1}, target is {2}",
+                        controller.GetComponent<GameController>().GetCurrentState(),
+                        keyfile == gc.EscapeKeyFile() ? "correct" : "wrong",
+                        target == gc.EscapeTarget() ? "correct" : "wrong"));
+            return;
+        }
+
+        appendLogLine("You win");
+        updateGameState();
     }
 
     #endregion

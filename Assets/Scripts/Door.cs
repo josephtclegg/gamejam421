@@ -8,6 +8,7 @@ public class Door : MonoBehaviour
     private TextMesh doorNumText;
     private bool isOpen = false;
     private string doorNumber = "9999";
+    private bool isLocked;
 
     void Start()
     {
@@ -23,6 +24,10 @@ public class Door : MonoBehaviour
         doorNumText.text = doorNumber;
     }
 
+    public void SetLocked(bool locked) {
+        isLocked = locked;
+    }
+
     public string GetDoorNumber()
     {
         return doorNumber;
@@ -33,8 +38,15 @@ public class Door : MonoBehaviour
         doorNumber = num.ToString();
     }
 
+    public void SetDoorText(string text)
+    {
+        doorNumber = text;
+    }
+
     public void OpenDoor()
     {
+        if (isLocked) return;
+
         if (!isOpen)
             transform.RotateAround(transform.parent.position, Vector3.up, -90);
         else
