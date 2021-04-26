@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
 	public GameObject player;
     private float velocity = 0;
     private Camera cam;
+	public bool got = false;
 
     private void Start()
     {
@@ -34,12 +35,11 @@ public class PlayerController : MonoBehaviour
             characterController.Move(new Vector3(0, velocity, 0));
         }
 
-<<<<<<< HEAD:Assets/Scripts/PlayerController.cs
         if(Vector3.Distance(player.transform.position, gnod.transform.position) < 2.0)
 		{
-			Debug.Log("Your new major is deezology");
+			got = true;
 		}
-=======
+
         RaycastHit hit;
         int layerMask = (1 << 9);
         if (Input.GetButtonDown("Fire1") && Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, 10.0f, layerMask)) {
@@ -47,6 +47,5 @@ public class PlayerController : MonoBehaviour
                 hit.collider.transform.gameObject.GetComponent<Door>().OpenDoor();
             }
         }
->>>>>>> main:Assets/PlayerController.cs
     }
 }
