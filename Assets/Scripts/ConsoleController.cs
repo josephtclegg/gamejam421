@@ -13,7 +13,7 @@ public delegate void CommandHandler(string[] args);
 
 public class ConsoleController
 {
-
+    private GameObject controller;
     private GameObject player;
 
     #region Event declarations
@@ -56,7 +56,7 @@ public class ConsoleController
 
     const string repeatCmdName = "!!"; //Name of the repeat command, constant since it needs to skip these if they are in the command history
 
-    public ConsoleController(GameObject p)
+    public ConsoleController(GameObject p, GameObject c)
     {
         //When adding commands, you must add a call below to registerCommand() with its name, implementation method, and help text.
         registerCommand("echo", echo, "\nechoes arguments back as array (for testing argument parser)\n");
@@ -64,8 +64,12 @@ public class ConsoleController
         registerCommand("hide", hide, "Hide the console.\n");
         registerCommand(repeatCmdName, repeatCommand, "Repeat last command.\n");
         registerCommand("cd", cd, "Change directory.\n");
+        registerCommand("ls", ls, "list directory contents\n");
+        registerCommand("cat", cat, "print files\n    Usage: cat FILENAME\n");
+        registerCommand("unzip", unzip, "extract compressed ZIP archive\n");
 
         player = p;
+        controller = c;
     }
 
     void registerCommand(string command, CommandHandler handler, string help)
@@ -156,41 +160,23 @@ public class ConsoleController
         return (new string(parmCharsArr)).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
     }
 
+    public void updateGameState()
+    {
+        controller.GetComponent<GameController>().updateGameState();
+    }
+
+    public bool playerInSeas()
+    {
+        return player.GetComponent<PlayerController>().InSeas();
+    }
+
+    public State getGameState()
+    {
+        return controller.GetComponent<GameController>().getGameState();
+    }
+
     #region Command handlers
     //Implement new commands in this region of the file.
-
-    /// <summary>
-    /// A test command to demonstrate argument checking/parsing.
-    /// Will repeat the given word a specified number of times.
-    /// </summary>
-    void babble(string[] args)
-    {
-        if (args.Length < 2)
-        {
-            appendLogLine("Expected 2 arguments.");
-            return;
-        }
-        string text = args[0];
-        if (string.IsNullOrEmpty(text))
-        {
-            appendLogLine("Expected arg1 to be text.");
-        }
-        else
-        {
-            int repeat = 0;
-            if (!Int32.TryParse(args[1], out repeat))
-            {
-                appendLogLine("Expected an integer for arg2.");
-            }
-            else
-            {
-                for (int i = 0; i < repeat; ++i)
-                {
-                    appendLogLine(string.Format("{0} {1}", text, i));
-                }
-            }
-        }
-    }
 
     void echo(string[] args)
     {
@@ -205,6 +191,7 @@ public class ConsoleController
 
     void help(string[] args)
     {
+        updateGameState();
         foreach (CommandRegistration reg in commands.Values)
         {
             appendLogLine(string.Format("{0}: {1}", reg.command, reg.help));
@@ -233,11 +220,6 @@ public class ConsoleController
         }
     }
 
-    void reload(string[] args)
-    {
-        Application.LoadLevel(Application.loadedLevel);
-    }
-
     void cd(string[] args)
     {
         Regex regex = new Regex(@"^\/home\/eggert\/(\d+)");
@@ -261,10 +243,82 @@ public class ConsoleController
         }
     }
 
-    void resetPrefs(string[] args)
+    void ls(string[] args)
     {
-        PlayerPrefs.DeleteAll();
-        PlayerPrefs.Save();
+        appendLogLine("\n");
+        appendLogLine("hint1.txt\n");
+        if (getGameState() == State.NoGoalsCompleted)
+        {
+            return;
+        }
+        else if (getGameState() == State.FewGoalsCompleted)
+        {
+            if (playerInSeas())
+            {
+                appendLogLine("key.zip\n");
+            }
+        } else if (getGameState() == State.SomeGoalsCompleted) {
+            appendLogLine("key.zip\n");
+            appendLogLine("5144.key\n");
+        } else if (getGameState() == State.ManyGoalsCompleted)
+        {
+            appendLogLine("key.zip\n");
+            appendLogLine("5144.key\n");
+            appendLogLine("next.hint");
+        }
+        else
+        {
+            appendLogLine("key.zip\n");
+            appendLogLine("5144.key\n");
+            appendLogLine("next.hint");
+        }
+    }
+
+    void cat(string[] args)
+    {
+        if(args.Length < 1)
+        {
+            appendLogLine("Usage: cat FILENAME\n");
+            return;
+        }
+        if (args[0] == "hint1.txt")
+        {
+            appendLogLine("\n");
+            appendLogLine("could go for some cheap cs coffee");
+            if(getGameState() == State.NoGoalsCompleted)
+            {
+                updateGameState();
+            }
+        }
+        else if (args[0] == "next.hint")
+        {
+            appendLogLine("\n");
+            appendLogLine("i need piss");
+        }
+        else
+        {
+            appendLogLine("Couldn't cat that file");
+        }
+    }
+
+    void unzip(string[] args)
+    {
+        if(args.Length < 1)
+        {
+            appendLogLine("\nUsage: unzip FILENAME\n");
+            return;
+        }
+        if(args[0] == "key.zip")
+        {
+            if (playerInSeas())
+            {
+                if(getGameState() == State.FewGoalsCompleted)
+                {
+                    updateGameState();
+                }
+                appendLogLine("\n unzip: 5144.key\n");
+            }
+        }
     }
 
     #endregion

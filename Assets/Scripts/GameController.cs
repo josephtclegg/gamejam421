@@ -8,13 +8,24 @@ public class GameController : MonoBehaviour
 	public GameObject player;
 	public GameObject gnod;
 	public GameObject goContainer;
-	private GameStateMachine gsm = new GameStateMachine();
+    private GameStateMachine gsm;
 
     // Start is called before the first frame update
     void Start()
     {
-		
-	}
+		gsm = new GameStateMachine();
+    }
+
+    public void updateGameState()
+    {
+        Debug.Log(gsm.GetCurrentState());
+        gsm.MakeTransition(Transition.CompletedGoal);
+    }
+
+    public State getGameState()
+    {
+        return gsm.GetCurrentState();
+    }
 
     // Update is called once per frame
     void Update()

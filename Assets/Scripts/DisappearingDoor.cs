@@ -21,6 +21,8 @@ public class DisappearingDoor : MonoBehaviour
                 door = child.gameObject;
             if (child.tag == "Wall")
                 facade = child.gameObject;
+            if (child.tag == "DoorL3")
+                door = child.gameObject;
         }
 
         door.SetActive(true);

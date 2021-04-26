@@ -5,10 +5,11 @@ public class PlayerController : MonoBehaviour
     CharacterController characterController;
     public float MovementSpeed = 1;
     public float Gravity = 9.8f;
+    public GameObject controller;
     public GameObject gnod;
     private float velocity = 0;
     private Camera cam;
-	public bool got = false;
+    private bool inSeas = false;
 
     private void Start()
     {
@@ -39,8 +40,34 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonDown("Fire1") && Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, 10.0f, layerMask)) {
             if (hit.collider.transform.tag == "Door") {
                 hit.collider.transform.gameObject.GetComponent<Door>().OpenDoor();
+            } else if(hit.collider.transform.tag == "DoorL3")
+            {
+                hit.collider.transform.gameObject.GetComponent<DoorL3>().OpenDoor();
             }
         }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.name == "SeasCube")
+        {
+            Debug.Log("In seas!");
+            inSeas = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.name == "SeasCube")
+        {
+            Debug.Log("Out seas!");
+            inSeas = false;
+        }
+    }
+
+    public bool InSeas()
+    {
+        return inSeas;
     }
 
     public CharacterController GetCharacterController() {
