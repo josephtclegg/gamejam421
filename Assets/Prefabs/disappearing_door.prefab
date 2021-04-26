@@ -138,7 +138,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c4267bf35305781cac785fb902df748, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  doorNumber: 1234
 --- !u!1 &3529288215802797891
 GameObject:
   m_ObjectHideFlags: 0
@@ -289,7 +288,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 19ca8267834e344e3b66fc126714ec10, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -369,6 +368,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69ea5e2c732a28f4e8ece81df43169ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  doorNumber: 9999
   chanceOfDisappearing: 50
 --- !u!1 &7009701799954915525
 GameObject:

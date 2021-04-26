@@ -7,11 +7,14 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 public delegate void CommandHandler(string[] args);
 
 public class ConsoleController
 {
+
+    private GameObject player;
 
     #region Event declarations
     // Used to communicate with ConsoleView
@@ -53,13 +56,16 @@ public class ConsoleController
 
     const string repeatCmdName = "!!"; //Name of the repeat command, constant since it needs to skip these if they are in the command history
 
-    public ConsoleController()
+    public ConsoleController(GameObject p)
     {
         //When adding commands, you must add a call below to registerCommand() with its name, implementation method, and help text.
         registerCommand("echo", echo, "\nechoes arguments back as array (for testing argument parser)\n");
         registerCommand("help", help, "Print this help.\n");
         registerCommand("hide", hide, "Hide the console.\n");
         registerCommand(repeatCmdName, repeatCommand, "Repeat last command.\n");
+        registerCommand("cd", cd, "Change directory.\n");
+
+        player = p;
     }
 
     void registerCommand(string command, CommandHandler handler, string help)
@@ -86,7 +92,7 @@ public class ConsoleController
 
     public void runCommandString(string commandString)
     {
-        appendLogLine("$ " + commandString);
+        appendLogLine("\n$ " + commandString);
 
         string[] commandSplit = parseArguments(commandString);
         string[] args = new string[0];
@@ -230,6 +236,29 @@ public class ConsoleController
     void reload(string[] args)
     {
         Application.LoadLevel(Application.loadedLevel);
+    }
+
+    void cd(string[] args)
+    {
+        Regex regex = new Regex(@"^\/home\/eggert\/(\d+)");
+        Match match = regex.Match(args[0]);
+        if (!match.Success) {
+            appendLogLine(string.Format("cd: no such file or directory: {0}", args[0]));
+            return;
+        }
+
+        String doorNum = match.Groups[1].Value;
+        GameObject doors = GameObject.FindGameObjectsWithTag("Doors")[0];
+        foreach(Transform d in doors.transform) {
+            Door door = d.GetChild(0).gameObject.GetComponent<Door>();
+            Debug.Log(string.Format("Found door number {0}; looking for {1}", door == null ? "null" : door.GetDoorNumber(), doorNum));
+            if (door != null && door.GetDoorNumber() == doorNum) {
+                Debug.Log(string.Format("teleporting player from {0} to {1}", player.transform.position, d.position));
+                player.GetComponent<PlayerController>().GetCharacterController().Move(d.position + d.forward - player.transform.position);
+                visibilityChanged(false);
+                return;
+            }
+        }
     }
 
     void resetPrefs(string[] args)

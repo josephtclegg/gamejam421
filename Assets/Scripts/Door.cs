@@ -23,6 +23,11 @@ public class Door : MonoBehaviour
         doorNumText.text = doorNumber;
     }
 
+    public string GetDoorNumber()
+    {
+        return doorNumber;
+    }
+
     public void SetDoorNumber(int num)
     {
         doorNumber = num.ToString();
