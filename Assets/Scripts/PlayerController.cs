@@ -5,6 +5,8 @@ public class PlayerController : MonoBehaviour
     CharacterController characterController;
     public float MovementSpeed = 1;
     public float Gravity = 9.8f;
+    public GameObject gnod;
+	public GameObject player;
     private float velocity = 0;
     private Camera cam;
 
@@ -31,5 +33,10 @@ public class PlayerController : MonoBehaviour
             velocity -= Gravity * Time.deltaTime;
             characterController.Move(new Vector3(0, velocity, 0));
         }
+
+        if(Vector3.Distance(player.transform.position, gnod.transform.position) < 2.0)
+		{
+			Debug.Log("Your new major is deezology");
+		}
     }
 }
