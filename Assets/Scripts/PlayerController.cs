@@ -34,11 +34,6 @@ public class PlayerController : MonoBehaviour
             characterController.Move(new Vector3(0, velocity, 0));
         }
 
-        if(Vector3.Distance(player.transform.position, gnod.transform.position) < 2.0)
-	{
-		got = true;
-	}
-
         RaycastHit hit;
         int layerMask = (1 << 9);
         if (Input.GetButtonDown("Fire1") && Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, 10.0f, layerMask)) {
@@ -46,12 +41,9 @@ public class PlayerController : MonoBehaviour
                 hit.collider.transform.gameObject.GetComponent<Door>().OpenDoor();
             }
         }
-<<<<<<< HEAD
     }
 
     public CharacterController GetCharacterController() {
         return characterController;
-=======
->>>>>>> controlla
     }
 }
