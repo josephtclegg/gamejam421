@@ -18,19 +18,9 @@ public enum Transition
     GotCaughtByGnod
 }
 
-public class GameStateMachine : MonoBehaviour
+public class GameStateMachine
 {
     private State state;
-
-    void Start()
-    {
-        state = State.NoGoalsCompleted;
-    }
-
-    void Update()
-    {
-        // Update UI stuff here
-    }
 
     public State GetCurrentState() {
         return state;

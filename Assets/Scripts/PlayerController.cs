@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     public GameObject gnod;
     private float velocity = 0;
     private Camera cam;
+	public bool got = false;
 
     private void Start()
     {
@@ -33,10 +34,10 @@ public class PlayerController : MonoBehaviour
             characterController.Move(new Vector3(0, velocity, 0));
         }
 
-        if(Vector3.Distance(transform.position, gnod.transform.position) < 2.0)
-        {
-          Debug.Log("Your new major is deezology");
-        }
+        if(Vector3.Distance(player.transform.position, gnod.transform.position) < 2.0)
+	{
+		got = true;
+	}
 
         RaycastHit hit;
         int layerMask = (1 << 9);
@@ -45,9 +46,12 @@ public class PlayerController : MonoBehaviour
                 hit.collider.transform.gameObject.GetComponent<Door>().OpenDoor();
             }
         }
+<<<<<<< HEAD
     }
 
     public CharacterController GetCharacterController() {
         return characterController;
+=======
+>>>>>>> controlla
     }
 }
