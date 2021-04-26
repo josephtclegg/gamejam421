@@ -22,6 +22,11 @@ public class GameController : MonoBehaviour
         gsm.MakeTransition(Transition.CompletedGoal);
     }
 
+    public State getGameState()
+    {
+        return gsm.GetCurrentState();
+    }
+
     // Update is called once per frame
     void Update()
     {

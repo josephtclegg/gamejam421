@@ -64,6 +64,9 @@ public class ConsoleController
         registerCommand("hide", hide, "Hide the console.\n");
         registerCommand(repeatCmdName, repeatCommand, "Repeat last command.\n");
         registerCommand("cd", cd, "Change directory.\n");
+        registerCommand("ls", ls, "list directory contents\n");
+        registerCommand("cat", cat, "print files\n    Usage: cat FILENAME\n");
+        registerCommand("unzip", unzip, "extract compressed ZIP archive\n");
 
         player = p;
         controller = c;
@@ -162,6 +165,16 @@ public class ConsoleController
         controller.GetComponent<GameController>().updateGameState();
     }
 
+    public bool playerInSeas()
+    {
+        return player.GetComponent<PlayerController>().InSeas();
+    }
+
+    public State getGameState()
+    {
+        return controller.GetComponent<GameController>().getGameState();
+    }
+
     #region Command handlers
     //Implement new commands in this region of the file.
 
@@ -226,6 +239,84 @@ public class ConsoleController
                 player.GetComponent<PlayerController>().GetCharacterController().Move(d.position + d.forward - player.transform.position);
                 visibilityChanged(false);
                 return;
+            }
+        }
+    }
+
+    void ls(string[] args)
+    {
+        appendLogLine("\n");
+        appendLogLine("hint1.txt\n");
+        if (getGameState() == State.NoGoalsCompleted)
+        {
+            return;
+        }
+        else if (getGameState() == State.FewGoalsCompleted)
+        {
+            if (playerInSeas())
+            {
+                appendLogLine("key.zip\n");
+            }
+        } else if (getGameState() == State.SomeGoalsCompleted) {
+            appendLogLine("key.zip\n");
+            appendLogLine("5144.key\n");
+        } else if (getGameState() == State.ManyGoalsCompleted)
+        {
+            appendLogLine("key.zip\n");
+            appendLogLine("5144.key\n");
+            appendLogLine("next.hint");
+        }
+        else
+        {
+            appendLogLine("key.zip\n");
+            appendLogLine("5144.key\n");
+            appendLogLine("next.hint");
+        }
+    }
+
+    void cat(string[] args)
+    {
+        if(args.Length < 1)
+        {
+            appendLogLine("Usage: cat FILENAME\n");
+            return;
+        }
+        if (args[0] == "hint1.txt")
+        {
+            appendLogLine("\n");
+            appendLogLine("could go for some cheap cs coffee");
+            if(getGameState() == State.NoGoalsCompleted)
+            {
+                updateGameState();
+            }
+        }
+        else if (args[0] == "next.hint")
+        {
+            appendLogLine("\n");
+            appendLogLine("i need piss");
+        }
+        else
+        {
+            appendLogLine("Couldn't cat that file");
+        }
+    }
+
+    void unzip(string[] args)
+    {
+        if(args.Length < 1)
+        {
+            appendLogLine("\nUsage: unzip FILENAME\n");
+            return;
+        }
+        if(args[0] == "key.zip")
+        {
+            if (playerInSeas())
+            {
+                if(getGameState() == State.FewGoalsCompleted)
+                {
+                    updateGameState();
+                }
+                appendLogLine("\n unzip: 5144.key\n");
             }
         }
     }
