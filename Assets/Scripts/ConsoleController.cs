@@ -193,7 +193,7 @@ public class ConsoleController
 
     void help(string[] args)
     {
-        updateGameState();
+        //updateGameState();
         foreach (CommandRegistration reg in commands.Values)
         {
             appendLogLine(string.Format("{0}: {1}", reg.command, reg.help));
@@ -226,17 +226,20 @@ public class ConsoleController
     {
         Regex regex = new Regex(@"^\/home\/eggert\/(\d+)");
         Match match = regex.Match(args[0]);
-        if (!match.Success) {
+        if (!match.Success)
+        {
             appendLogLine(string.Format("cd: no such file or directory: {0}", args[0]));
             return;
         }
 
         String doorNum = match.Groups[1].Value;
         GameObject doors = GameObject.FindGameObjectsWithTag("Doors")[0];
-        foreach(Transform d in doors.transform) {
+        foreach (Transform d in doors.transform)
+        {
             Door door = d.GetChild(0).gameObject.GetComponent<Door>();
             Debug.Log(string.Format("Found door number {0}; looking for {1}", door == null ? "null" : door.GetDoorNumber(), doorNum));
-            if (door != null && door.GetDoorNumber() == doorNum) {
+            if (door != null && door.GetDoorNumber() == doorNum)
+            {
                 Debug.Log(string.Format("teleporting player from {0} to {1}", player.transform.position, d.position));
                 player.GetComponent<PlayerController>().GetCharacterController().Move(d.position + d.forward - player.transform.position);
                 visibilityChanged(false);
@@ -259,10 +262,13 @@ public class ConsoleController
             {
                 appendLogLine("key.zip\n");
             }
-        } else if (getGameState() == State.SomeGoalsCompleted) {
+        }
+        else if (getGameState() == State.SomeGoalsCompleted)
+        {
             appendLogLine("key.zip\n");
             appendLogLine("5144.key\n");
-        } else if (getGameState() == State.ManyGoalsCompleted)
+        }
+        else if (getGameState() == State.ManyGoalsCompleted)
         {
             appendLogLine("key.zip\n");
             appendLogLine("5144.key\n");
@@ -278,7 +284,7 @@ public class ConsoleController
 
     void cat(string[] args)
     {
-        if(args.Length < 1)
+        if (args.Length < 1)
         {
             appendLogLine("Usage: cat FILENAME\n");
             return;
@@ -287,7 +293,7 @@ public class ConsoleController
         {
             appendLogLine("\n");
             appendLogLine("could go for some cheap cs coffee");
-            if(getGameState() == State.NoGoalsCompleted)
+            if (getGameState() == State.NoGoalsCompleted)
             {
                 updateGameState();
             }
@@ -305,35 +311,38 @@ public class ConsoleController
 
     void unzip(string[] args)
     {
-        if(args.Length < 1)
+        if (args.Length < 1)
         {
             appendLogLine("\nUsage: unzip FILENAME\n");
             return;
         }
-        if(args[0] == "key.zip")
+        if (args[0] == "key.zip")
         {
             if (playerInSeas())
             {
-                if(getGameState() == State.FewGoalsCompleted)
+                if (getGameState() == State.FewGoalsCompleted)
                 {
                     updateGameState();
                 }
                 appendLogLine("\n unzip: 5144.key\n");
             }
         }
+    }
 
     void chmod(string[] args)
     {
         string mode = args[0];
         string file = args[1];
 
-        if (mode != "777" || file != "bathroom") {
+        if (mode != "777" || file != "bathroom")
+        {
             appendLogLine(string.Format("Permissions for file {0} are not modifiable.", file));
             return;
         }
 
         PlayerController pCont = player.GetComponent<PlayerController>();
-        if (!pCont.IsInFrontOfBathroom() || controller.GetComponent<GameController>().GetCurrentState() != State.SomeGoalsCompleted) {
+        if (!pCont.IsInFrontOfBathroom() || controller.GetComponent<GameController>().GetCurrentState() != State.ManyGoalsCompleted)
+        {
             appendLogLine(string.Format("Permission denied."));
             Debug.Log(string.Format("Player is {0}in front of bathroom and current state is {1}",
                         !pCont.IsInFrontOfBathroom() ? "not " : "", controller.GetComponent<GameController>().GetCurrentState()));
@@ -350,11 +359,13 @@ public class ConsoleController
 
     void ssh(string[] args)
     {
-        if (args.Length < 3) {
+        if (args.Length < 3)
+        {
             appendLogLine("SSH target required.");
             return;
         }
-        if (args[0] != "-i") {
+        if (args[0] != "-i")
+        {
             appendLogLine(string.Format("ssh requires an identity file using -i"));
             return;
         }
@@ -363,9 +374,10 @@ public class ConsoleController
         string target = args[2];
 
         GameController gc = controller.GetComponent<GameController>();
-        if (gc.GetCurrentState() != State.ManyGoalsCompleted
+        if (gc.GetCurrentState() != State.AlmostGoalsCompleted
                 || keyfile != gc.EscapeKeyFile()
-                || target != gc.EscapeTarget()) {
+                || target != gc.EscapeTarget())
+        {
             appendLogLine(string.Format("Permission denied."));
             Debug.Log(string.Format("Current state is {0}, keyfile is {1}, target is {2}",
                         controller.GetComponent<GameController>().GetCurrentState(),

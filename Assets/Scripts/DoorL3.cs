@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DoorL3 : MonoBehaviour
+public class DoorL3 : Door
 {
     public GameObject controller;
     private TextMesh doorNumText;

@@ -8,6 +8,7 @@ public enum State
     FewGoalsCompleted,
     SomeGoalsCompleted,
     ManyGoalsCompleted,
+    AlmostGoalsCompleted,
     AllGoalsCompleted,
     CaughtByGnod
 }
@@ -39,6 +40,9 @@ public class GameStateMachine
                     state = State.ManyGoalsCompleted;
                     break;
                 case State.ManyGoalsCompleted:
+                    state = State.AlmostGoalsCompleted;
+                    break;
+                case State.AlmostGoalsCompleted:
                     state = State.AllGoalsCompleted;
                     break;
                 default:
